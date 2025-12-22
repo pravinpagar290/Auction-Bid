@@ -1,11 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler";
-import ErrorHandler from "../middlewares/error.js";
+import ErrorHandler from "../middlewares/error.middleware.js";
 
 import { Auction } from "../models/auction.model";
 import { User } from "../models/user.model.js";
 import { Bid } from "../models/bid.model.js";
 
-export const placeBid = asyncHandler(async (req, resizeBy, next) => {
+export const placeBid = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const auctionItem = await Auction.findById(id);
@@ -13,9 +13,12 @@ export const placeBid = asyncHandler(async (req, resizeBy, next) => {
     return next(new ErrorHandler("Auction item not found", 404));
   }
 
-  const amount = req.body;
-  if (!amount) {
-    return next(new ErrorHandler("Please provide bid amount", 400));
+  // Extract and validate numeric bid amount
+  const amount = Number(req.body.amount);
+  if (!amount || isNaN(amount)) {
+    return next(
+      new ErrorHandler("Please provide a valid numeric bid amount", 400)
+    );
   }
   if (amount <= auctionItem.currentBid) {
     return next(
@@ -37,9 +40,9 @@ export const placeBid = asyncHandler(async (req, resizeBy, next) => {
       (bid) => bid.userId.toString() === req.user._id.toString()
     );
     if (existingBid && existingBidInAuction) {
+      // update subdocument and external Bid document then save parent auction
       existingBidInAuction.amount = amount;
       existingBid.amount = amount;
-      await existingBidInAuction.save();
       await existingBid.save();
       auctionItem.currentBid = amount;
     } else {
@@ -66,6 +69,7 @@ export const placeBid = asyncHandler(async (req, resizeBy, next) => {
     res.status(200).json({
       success: true,
       message: "Bid placed successfully",
+      currentBid: auctionItem.currentBid,
     });
   } catch (error) {
     return next(
