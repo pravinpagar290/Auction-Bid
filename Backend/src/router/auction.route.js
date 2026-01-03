@@ -1,17 +1,15 @@
 import express from "express";
-import {
-  createAuction,
-  getAllAuctionItems,
-  getAuctionItem,
-  updateAuctionItem,
-  deleteAuctionItem,
-} from "../controllers/auction.controller.js";
-
-import {
-  isAuthenticated,
-  isAuthorized,
-} from "../middlewares/auth.middleware.js";
+import { isAuthenticated,isAuthorized } from "../middlewares/auth.middleware.js";
 import { trackCommissionStatus } from "../middlewares/trackCommission.middleware.js";
+import {
+  addNewAuctionItem,
+  getAllItems,
+  getAuctionDetails,
+  getMyAuctionItems,
+  removeFromAuction,
+  republishItem,
+} from "../controllers/auctionItem.contoller.js";
+
 
 const router = express.Router();
 
@@ -20,24 +18,36 @@ router.post(
   isAuthenticated,
   isAuthorized("seller"),
   trackCommissionStatus,
-  createAuction
+  addNewAuctionItem
 );
 
-router.get("/items", getAllAuctionItems);
+router.get(
+  "/items",
+   getAllItems
+  );
 
-router.get("/item/:id", getAuctionItem);
+router.get(
+  "/item/:id", 
+  getMyAuctionItems
+);
 
 router.delete(
   "/delete_item/:id",
   isAuthenticated,
   isAuthorized("seller"),
-  deleteAuctionItem
+  removeFromAuction
 );
 router.put(
   "/update_item/:id",
   isAuthenticated,
   isAuthorized("seller"),
-  updateAuctionItem
+  republishItem
+);
+router.get(
+  "/get-detail/:id",
+  isAuthenticated,
+  isAuthorized("seller"),
+  getAuctionDetails
 );
 
 export default router;
