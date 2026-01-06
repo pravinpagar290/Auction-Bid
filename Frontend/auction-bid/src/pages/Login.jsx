@@ -1,0 +1,60 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../store/Slices/userSlice';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    form.append('email', email);
+    form.append('password', password);
+    dispatch(login(form));
+  };
+
+  useEffect(
+    () => {
+      if (isAuthenticated) {
+        navigate('/');
+      }
+    },
+    [dispatch, isAuthenticated, loading]
+  );
+
+  return (
+    <div>
+      <div>Logo</div>
+      <h1>Welcome Back </h1>
+      <span>Sign in to continue bidding</span>
+      <form action="" onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
+        <button type="submit" >
+          {loading ? 'Logging In...' : 'Login'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;

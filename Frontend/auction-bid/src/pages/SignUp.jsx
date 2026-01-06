@@ -2,7 +2,7 @@ import React from 'react';
 import { register } from '../store/Slices/userSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 const SignUp = () => {
   const [userName, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -18,6 +18,7 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,14 +55,20 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-  if (role !== "seller") {
-    setPaymentMethod("");
-    setBankName("");
-    setBankACCNumber("");
-    setHolder("");
-    setPaypalEmail("");
-  }
-}, [role]);
+    if (role !== 'seller') {
+      setPaymentMethod('');
+      setBankName('');
+      setBankACCNumber('');
+      setHolder('');
+      setPaypalEmail('');
+    }
+  }, [role]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigateTo('/');
+    }
+  }, [dispatch, loading, isAuthenticated]);
 
   return (
     <div className="">

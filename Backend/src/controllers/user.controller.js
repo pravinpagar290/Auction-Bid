@@ -94,9 +94,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
         bankName,
         accountHolderName,
       },
-      easypaisa: {
-        easypaisaAccountNumber,
-      },
       paypal: {
         paypalEmail,
       },

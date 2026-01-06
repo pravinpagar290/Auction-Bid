@@ -69,7 +69,7 @@ export const login = (data) => async (dispatch) => {
 
       }
     );
-    dispatch(userSlice.loginSuccess(response.data));
+    dispatch(userSlice.actions.loginSuccess(response.data));
   } catch (error) {
     dispatch(userSlice.loginFailed());
   }
