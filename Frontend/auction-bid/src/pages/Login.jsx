@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../store/Slices/userSlice';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -52,6 +53,7 @@ const Login = () => {
         <button type="submit" >
           {loading ? 'Logging In...' : 'Login'}
         </button>
+        <p>Don't have an account? <Link to={'/signup'}>Sign Up</Link></p>
       </form>
     </div>
   );

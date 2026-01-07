@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-
+import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   const [userName, setUsername] = useState('');
@@ -203,6 +203,7 @@ const validateForm = () => {
           <div></div>
         )}
         <button type="submit">Submit</button>
+        <p>Have an account? <Link to={'/login'}>Login</Link></p>
       </form>
     </div>
   );

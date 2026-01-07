@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createSlice } from '@reduxjs/toolkit';
 
 const auctionSlice = createSlice({
@@ -8,3 +9,5 @@ const auctionSlice = createSlice({
     
   }
 });
+
+export default auctionSlice.reducer
